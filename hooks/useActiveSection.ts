@@ -1,0 +1,29 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+/** Görünür alanın ortasına en yakın bölümün `id`'sini döndürür (scroll-spy). */
+export function useActiveSection<T extends string>(ids: readonly T[]): T {
+  const [active, setActive] = useState<T>(ids[0]);
+
+  useEffect(() => {
+    const elements = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) setActive(entry.target.id as T);
+        }
+      },
+      // Yalnızca ekranın ortasındaki ince şerit "aktif" sayılır.
+      { rootMargin: "-45% 0px -50% 0px" },
+    );
+
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [ids]);
+
+  return active;
+}

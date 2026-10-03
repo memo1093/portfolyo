@@ -1,0 +1,254 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-void: #04050d;
+  --color-deep: #0a0d1f;
+  --color-ink: #e8ebff;
+  --color-muted: #9aa3cc;
+  --color-neon: #38bdf8;
+  --color-aurora: #a78bfa;
+  --color-plasma: #f472b6;
+  --color-ember: #fb923c;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
+
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-slow: float 11s ease-in-out infinite;
+  --animate-spin-slow: spin 40s linear infinite;
+  --animate-pulse-glow: pulse-glow 3.5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(var(--tilt, 0deg));
+  }
+  50% {
+    transform: translate3d(0, -14px, 0) rotate(calc(var(--tilt, 0deg) + 2deg));
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+}
+
+@keyframes wormhole-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+:root {
+  color-scheme: dark;
+  --background: #04050d;
+  --foreground: #e8ebff;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--background);
+  /* Dekoratif nesneler mobilde yatay kaydırma/zoom-out oluşturmasın */
+  overflow-x: hidden;
+}
+
+/* Not: body'ye arka plan verme — negatif z-index'li nebula/yıldız katmanlarını örter. */
+body {
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(167, 139, 250, 0.45);
+  color: #fff;
+}
+
+/* Kaydırma çubuğu */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#38bdf8, #a78bfa);
+  border-radius: 999px;
+  border: 2px solid var(--background);
+}
+
+section[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+/* ------------------------------ Yardımcılar ------------------------------ */
+
+@utility glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.075),
+    rgba(255, 255, 255, 0.02)
+  );
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 10px 40px -12px rgba(2, 4, 24, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+@utility text-cosmic {
+  background-image: linear-gradient(
+    100deg,
+    #ffffff 0%,
+    #b9e6ff 30%,
+    #38bdf8 55%,
+    #a78bfa 80%,
+    #f472b6 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--color-neon);
+    outline-offset: 3px;
+  }
+}
+
+/* Fare takibi yapan spot ışığı (GlassCard) */
+.spotlight {
+  isolation: isolate;
+}
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    380px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(56, 189, 248, 0.16),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+  z-index: -1;
+}
+.spotlight:hover::before {
+  opacity: 1;
+}
+
+/* Solucan deliği düğümü */
+.wormhole {
+  display: block;
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, #000 0 28%, transparent 30%),
+    conic-gradient(
+      from 0deg,
+      #38bdf8,
+      #a78bfa,
+      #f472b6,
+      #38bdf8
+    );
+  box-shadow:
+    0 0 24px rgba(56, 189, 248, 0.55),
+    0 0 60px rgba(167, 139, 250, 0.35);
+  animation: wormhole-spin 6s linear infinite;
+}
+.wormhole::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: inherit;
+  border: 1px dashed rgba(167, 139, 250, 0.6);
+  animation: wormhole-spin 14s linear infinite reverse;
+}
+
+/* Gezegenler */
+.planet {
+  border-radius: 9999px;
+  background:
+    radial-gradient(
+      circle at 30% 28%,
+      var(--p-hi) 0%,
+      var(--p-mid) 38%,
+      var(--p-lo) 78%
+    );
+  box-shadow:
+    inset -18px -14px 36px rgba(0, 0, 10, 0.75),
+    inset 8px 6px 18px rgba(255, 255, 255, 0.16),
+    0 0 50px -6px var(--p-glow);
+}
+.planet::before {
+  /* yüzey bantları */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: repeating-linear-gradient(
+    172deg,
+    rgba(255, 255, 255, 0.07) 0 6px,
+    transparent 6px 17px
+  );
+  mix-blend-mode: overlay;
+}
+.planet-ring {
+  position: absolute;
+  left: -34%;
+  right: -34%;
+  top: 50%;
+  height: 34%;
+  transform: translateY(-50%) rotate(-18deg);
+  border-radius: 50%;
+  border: 3px solid var(--p-ring, rgba(255, 255, 255, 0.5));
+  box-shadow: 0 0 22px var(--p-glow);
+}
+.planet-ring-back {
+  clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+}
+.planet-ring-front {
+  clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
+}
+
+.twinkle {
+  animation: twinkle var(--d, 3s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+/* Hareket azaltma tercihi */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
